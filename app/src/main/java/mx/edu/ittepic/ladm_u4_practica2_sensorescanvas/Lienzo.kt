@@ -14,49 +14,60 @@ import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.getSystemService
 
-class Lienzo (p: MainActivity): View(p), SensorEventListener {
+class Lienzo (private val p: MainActivity): View(p) {
+    val paint = Paint()
+    val bruja = BitmapFactory.decodeResource(resources, R.drawable.bruja)
+    val luna = BitmapFactory.decodeResource(resources, R.drawable.luna)
+    val sol = BitmapFactory.decodeResource(resources, R.drawable.sol)
+    val nubes = BitmapFactory.decodeResource(resources, R.drawable.nube)
 
-    private lateinit var sensorManager: SensorManager
+    val azul = "#ADD8E6"
+    val azulOscuro = "#252850"
 
-    var bruja =BitmapFactory.decodeResource(resources,R.drawable.bruja)
-    var luna = BitmapFactory.decodeResource(resources,R.drawable.luna)
-    var nube = BitmapFactory.decodeResource(resources,R.drawable.nube)
-    var sol = BitmapFactory.decodeResource(resources,R.drawable.sol)
-
-    override fun onSensorChanged(p0: SensorEvent?) {
-
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        if (p.noche) {
+            noche(canvas)
+        } else {
+            dia(canvas)
+        }
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("Not yet implemented")
+    private fun dia(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor(azul))
+        val gx = p.gx * 100
+        val gy = p.gy * 100
+        canvas.drawBitmap(
+            sol,
+            width / 2f - sol.width / 2f + gy,
+            height / 2f - sol.height / 2f + gx,
+            paint
+        )
+        canvas.drawBitmap(nubes, width / 2f - nubes.width / 2f + gy, gx, paint)
+        canvas.drawBitmap(
+            bruja,
+            width / 2f - bruja.width / 2f,
+            height / 2f - bruja.height / 2f,
+            paint
+        )
     }
 
-    override fun onDraw(c: Canvas) {
-        super.onDraw(c)
-        var p = Paint()
-
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-
-        //fondo
-        c.drawColor(Color.rgb(0,0,139))
-
-        //nubes
-
-        c.drawBitmap(nube,-350f,150f,p)
-        c.drawBitmap(nube,400f,150f,p)
-
-        //luna
-         c.drawBitmap(luna,-80f,700f,p)
-
-        //sol
-        //c.drawBitmap(sol,-80f,700f,p)
-
-        //imagen de bruja
-        c.drawBitmap(bruja,300f,400f,p)
-
+    private fun noche(canvas: Canvas) {
+        canvas.drawColor(Color.parseColor(azulOscuro))
+        val gx = p.gx * 100
+        val gy = p.gy * 100
+        canvas.drawBitmap(
+            luna,
+            width / 2f - luna.width / 2f + gy,
+            height / 2f - luna.height / 2f + gx,
+            paint
+        )
+        canvas.drawBitmap(nubes, width / 2f - nubes.width / 2f + gy, gx, paint)
+        canvas.drawBitmap(
+            bruja,
+            width / 2f - bruja.width / 2f,
+            height / 2f - bruja.height / 2f,
+            paint
+        )
     }
-
-
-
 }
